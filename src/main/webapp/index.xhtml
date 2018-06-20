@@ -1,0 +1,66 @@
+	<html xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:p="http://primefaces.org/ui">
+	<h:head>
+		<h:outputScript name="js/calendar_es.js"/>
+		<title>Register Employee</title>
+	</h:head>
+	
+<!-- 	<link rel="stylesheet" href="css/Estilos.css"></link> -->
+	<link rel="stylesheet" type="text/css" href="css/Estilos.css"></link>
+	<h:form id="formu1">
+		<p:growl id="messages"></p:growl>
+		<p:panelGrid columns="2">
+		
+			<p:outputLabel value="Introduce Nombre:"></p:outputLabel>
+			<p:inputText value="#{registerEmployee.employee.employeeName}"></p:inputText>
+			
+			<p:outputLabel value="Introduce Fecha de Alta:"></p:outputLabel>
+			<p:calendar locale="es" pattern="dd/MM/yyyy HH:mm:ss" value="#{registerEmployee.employee.employeeHireDate}"></p:calendar>
+			
+			<p:outputLabel value="Introduce Salario:"></p:outputLabel>
+			<p:inputText value="#{registerEmployee.employee.employeeSalary}"></p:inputText>		
+							
+		</p:panelGrid>
+		<p:commandButton value="Registrar" action="#{registerEmployee.register}" update="messages, :formu2, formu1"></p:commandButton>
+	</h:form>
+	
+	
+	<h:form id="formu2" rendered="#{registerEmployee.verificarSesion()}">
+	
+		<p:commandButton actionListener="#{registerEmployee.listar()}" value="Listar" update="formu2" ajax="false"/>	
+		
+		<p:dataTable value="#{registerEmployee.lstEmpleados}" var="emp">
+			<p:column headerText="Id">
+				<h:outputLabel value="#{emp.employeeId}" />
+			</p:column>
+			
+			<p:column headerText="Nombre">
+				<h:outputLabel value="#{emp.employeeName}" />
+			</p:column>
+			
+			<p:column headerText="Fecha">
+				<p:outputLabel value="#{emp.employeeHireDate}" >
+					<f:convertDateTime pattern="dd/MM/yyyy HH:mm" tipe ="time" timeZone="#{registerEmployee.timeZone}"/>
+					
+				</p:outputLabel>
+			</p:column>
+			
+			<p:column headerText="Salario">
+				<p:outputLabel value="#{emp.employeeSalary}" />
+			</p:column>
+			
+			<p:column headerText="Eliminar">
+				<h:commandLink actionListener="#{registerEmployee.eliminar(emp)}" value="Eliminar" />
+			</p:column>
+			
+			<p:column headerText="Modificar">
+				<h:commandLink action="#{registerEmployee.leer(emp)}" value="Modificar" />
+			</p:column>
+		</p:dataTable>
+		
+		<p:commandButton value="Cerrar Sesión" action="#{registerEmployee.cerrarSesion()}" />
+	</h:form>
+	</html>
